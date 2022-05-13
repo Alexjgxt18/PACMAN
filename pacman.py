@@ -1,5 +1,5 @@
 """
-Juego: Paint
+Juego: Pacman
 Programador 1: Josué Fuentes
 Programador 2: Alex Flores
 Fecha: 10 / mayo / 2022
@@ -22,7 +22,7 @@ ghosts = [
 ]
 # fmt: off
 
-#Parte donde se modifica el tablero
+# 3.- Parte donde se modifica el tablero
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0,
@@ -35,7 +35,7 @@ tiles = [
     0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0,
     0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
     0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
-    0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
     0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
@@ -127,21 +127,42 @@ def move():
     goto(pacman.x + 10, pacman.y + 10)
     dot(20, 'yellow')
 
+    # 1.- Se hacen a los fantasmas "mas" inteligentes
+    # Cambian su direccion de acuerdo a la posición del pacman
     for point, course in ghosts:
         if valid(point + course):
             point.move(course)
         else:
-            #Conocer donde esta el pacman respecto al fantasma
-            point.x #La x del fantasma
-            pacman.x #La x del pacman
+            #Se marca si el pacman esta arriba del fantasma
+            if (pacman.y > point.y):
+                if(pacman.x > point.x):
+                    #El pacman esta arriba a la derecha
+                    options = [
+                        # 3.- Se cambian las velocidad del fantasma
+                        vector(10, 0),
+                        vector(0, 10)
+                    ]
+                else:
+                    #El pacman esta arriba a la izquierda
+                    options = [
+                        vector(-10, 0),
+                        vector(0, 10)
+                    ]
+            else:
+                #El pacman esta abajo
+                if(pacman.x > point.x):
+                    #El pacman esta abajo a la derecha
+                    options = [
+                        vector(0, -10),
+                        vector(10, 0)
+                    ]
+                else:
+                    #El pacman esta abajo a la izquierda
+                    options = [
+                        vector(0, -10),
+                        vector(-10, 0)
+                    ]
 
-            #Movemos la velocidad de los fantasmas
-            options = [
-                vector(10, 0),
-                vector(-10, 0),
-                vector(0, 10),
-                vector(0, -10),
-            ]
             plan = choice(options)
             course.x = plan.x
             course.y = plan.y
